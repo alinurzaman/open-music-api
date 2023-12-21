@@ -12,8 +12,7 @@ class SongsService {
   async addSong({
     title, year, genre, performer, duration, albumId,
   }) {
-    const prefix = 'song-';
-    const id = prefix.concat(nanoid(16));
+    const id = `song-${nanoid(16)}`;
 
     const query = {
       text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',
