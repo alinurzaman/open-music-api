@@ -33,15 +33,29 @@ class SongsHandler {
     };
   }
 
-  async getSongByIdHandler(request) {
+  async getSongByIdHandler(request, h) {
     const { id } = request.params;
-    const song = await this._service.getSongById(id);
-    return {
-      status: 'success',
-      data: {
-        song,
-      },
-    };
+    try {
+      const song = await this._service.getSongFromCache(id);
+      const response = h.response({
+        status: 'success',
+        data: {
+          song,
+        },
+      })
+        .header('X-Data-Source', 'cache');
+
+      return response;
+    } catch (error) {
+      const song = await this._service.getSongById(id);
+
+      return {
+        status: 'success',
+        data: {
+          song,
+        },
+      };
+    }
   }
 
   async putSongByIdHandler(request) {
